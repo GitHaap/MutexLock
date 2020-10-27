@@ -1,6 +1,6 @@
 # MutexLock
 
-`MutexLock` class is a simply mutex getter for C#.
+`MutexLock` class is a simple mutex getter for C#.
 
 You can make cross-process exclusions.
 
