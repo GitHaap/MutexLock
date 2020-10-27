@@ -37,6 +37,8 @@
 			}
 			catch (AbandonedMutexException)
 			{
+				// 前取得者がmutexを取得したまま落ちた場合に例外が出てしまうので抑止する
+				// mutex自体は取得できるのでこのままIsLockingとする
 				IsLocking = true;
 			}
 		}
