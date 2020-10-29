@@ -18,7 +18,7 @@
 		/// 指定された名前のミューテックスをロックします。ロック結果はIsLockingプロパティを参照してください。
 		/// </summary>
 		/// <param name="mutexName">ミューテックス名</param>
-		/// <param name="millisecondsTimeout">ロック待ちのタイムアウト(ms)</param>
+		/// <param name="millisecondsTimeout">ロック待ちのタイムアウト(ms) 無限に待機する場合はInfinite(-1)を指定</param>
 		public MutexLock(string mutexName, int millisecondsTimeout)
 		{
 			IsLocking = false;
@@ -28,18 +28,17 @@
 			{
 				m_mutex = new Mutex(false, mutexName);
 				IsLocking = m_mutex.WaitOne(millisecondsTimeout, false);
-
-				// ロックを取得できなければ終了（mutexの解放は不要）
-				if (IsLocking == false)
-				{
-					return;
-				}
 			}
 			catch (AbandonedMutexException)
 			{
 				// 前取得者がmutexを取得したまま落ちた場合に例外が出てしまうので抑止する
 				// mutex自体は取得できるのでこのままIsLockingとする
 				IsLocking = true;
+			}
+			catch
+			{
+				// それ以外の例外はミューテックス取得はできない
+				IsLocking = false;
 			}
 		}
 
@@ -54,6 +53,7 @@
 				{
 					m_mutex.ReleaseMutex();
 					m_mutex.Close();
+					IsLocking = false;
 				}
 			}
 			catch { }
