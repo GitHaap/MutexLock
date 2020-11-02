@@ -12,5 +12,5 @@ Can be used in combination with `using` statement.
 ```C#
 using (var mutex = new MutexLock("mutexname", 1000))
 {
-  //TODO: exclusive processing
+  // exclusive processing
 }
